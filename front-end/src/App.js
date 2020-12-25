@@ -1,36 +1,53 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-
-// Update the code below to get and update data from the back-end server.
-// Note that this is the front-end server, and you will have to configure
-// the back-end server to allow cross-origin resource sharing.
+import React, { Component } from "react";
+import axios from "axios";
 
 class App extends Component {
   state = {
-    students: []
+    students : []
   };
 
   componentDidMount() {
-    axios.get('http://localhost:8080/students')
-    .then(res => {
+    axios.get("http://localhost:8080/students").then((res) => {
       this.setState({
-        students : res.data
+        students: res.data,
       });
-      console.log(res.data)
-    })
+    });
   }
 
   addStudent = (e) => {
     e.preventDefault();
-    // Add students to the back-end server, and then update
-    // the state with the response
+    axios
+      .post("http://localhost:8080/students", {
+        name: this.form.name.value,
+        program: this.form.program.value,
+        grade: this.form.grade.value,
+      })
+      .then(
+        axios.get("http://localhost:8080/students").then((res) => {
+          this.setState({
+            students: res.data,
+          });
+        })
+      );
   };
 
+  clikHandler = (e) => {
+    let i = e.target.id;
+    let student = this.state.students[i];
+
+    axios.delete("http://localhost:8080/students/" + student.id )
+      .then (res =>{
+        console.log(res.data)
+      }  
+      ) 
+    };
+
   render() {
-    const students = this.state.students.map((student) => {
+    const students = this.state.students.map((student , i) => {
       return (
-        <li key={student.id} className="list-group-item">
+        <li key={student.id} className="list-group-item" name="student" >
           {`${student.name}: ${student.program}, ${student.grade}`}
+          <input  type ='submit' value = 'Remove' onClick = {this.clikHandler} id = {i}/>
         </li>
       );
     });
@@ -40,27 +57,40 @@ class App extends Component {
         <div className="row">
           <div className="col-4">
             <h2>Add Student</h2>
-            <form onSubmit={this.addStudent} ref={form => this.form = form}>
+            <form onSubmit={this.addStudent} ref={(form) => (this.form = form)}>
               <div className="form-group">
                 <label htmlFor="name">Name</label>
-                <input type="text" id="name" placeholder="Enter Student Name" className="form-control" />
+                <input
+                  type="text"
+                  id="name"
+                  placeholder="Enter Student Name"
+                  className="form-control"
+                />
               </div>
               <div className="form-group">
                 <label htmlFor="program">Program</label>
-                <input type="text" id="program" placeholder="Enter Program" className="form-control" />
+                <input
+                  type="text"
+                  id="program"
+                  placeholder="Enter Program"
+                  className="form-control"
+                />
               </div>
               <div className="form-group">
                 <label htmlFor="">Grade</label>
-                <input type="text" id="grade" placeholder="Enter Grade" className="form-control" />
+                <input
+                  type="text"
+                  id="grade"
+                  placeholder="Enter Grade"
+                  className="form-control"
+                />
               </div>
               <button className="btn btn-primary">Submit</button>
             </form>
           </div>
           <div className="col-8">
             <h2>Students</h2>
-            <ul className="list-group">
-              {students}
-            </ul>
+            <ul className="list-group">{students}</ul>
           </div>
         </div>
       </div>
