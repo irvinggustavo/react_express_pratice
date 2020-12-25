@@ -1,5 +1,5 @@
 module.exports = {
-    students : [
+  students: [
     {
       id: "5dbb3dd8-49d8-4c3b-93d9-59230836b2f1",
       name: "Brynhildr Sadler",
@@ -48,5 +48,5 @@ module.exports = {
       program: "UX",
       grade: 83,
     },
-  ]
-}
+  ],
+};

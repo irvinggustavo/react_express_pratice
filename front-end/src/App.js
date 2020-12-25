@@ -3,7 +3,7 @@ import axios from "axios";
 
 class App extends Component {
   state = {
-    students : []
+    students: [],
   };
 
   componentDidMount() {
@@ -29,25 +29,33 @@ class App extends Component {
           });
         })
       );
+    this.form.name.value = "";
+    this.form.program.value = "";
+    this.form.grade.value = "";
   };
 
   clikHandler = (e) => {
     let i = e.target.id;
     let student = this.state.students[i];
 
-    axios.delete("http://localhost:8080/students/" + student.id )
-      .then (res =>{
-        console.log(res.data)
-      }  
-      ) 
-    };
+    axios.delete("http://localhost:8080/students/" + student.id).then((res) => {
+      this.setState({
+        students: res.data,
+      });
+    });
+  };
 
   render() {
-    const students = this.state.students.map((student , i) => {
+    const students = this.state.students.map((student, i) => {
       return (
-        <li key={student.id} className="list-group-item" name="student" >
+        <li key={student.id} className="list-group-item" name="student">
           {`${student.name}: ${student.program}, ${student.grade}`}
-          <input  type ='submit' value = 'Remove' onClick = {this.clikHandler} id = {i}/>
+          <input
+            type="submit"
+            value="Remove"
+            onClick={this.clikHandler}
+            id={i}
+          />
         </li>
       );
     });
